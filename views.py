@@ -65,3 +65,35 @@ def logout():
   logout_user()
   flash("You're logout Successfully","success")
   return redirect(url_for('index'))
+
+
+
+
+@app.route('/reset',methods=['GET','POST'])
+def reset():
+      if request.method == 'POST':
+             Email=request.form['Email']
+             user=Regtb.query.filter_by(Email=Email).first()
+             if user is None:
+                   flash('There is no account with that email. You must register first','danger')
+                   return render_template('reset.html')       
+      return render_template('reset.html')
+
+
+@app.route('/resetpassword',methods=['GET','POST'])
+def resetpassword():
+      if current_user.is_authenticated:
+            if request.method == 'POST':
+                  Password = request.form['Password']
+                  Confirm_Password = request.form['Confirm_Password']
+                  secure_password = generate_password_hash(Password, method="sha256")
+                  if Password == Confirm_Password:
+                        return render_template('reset.html')
+
+      return render_template('resetpassword.html')
+#   @app.route('/reset',methods=['GET','POST'])
+#   def reset():
+#    if request.method == 'POST':
+#       Email=request.form['Email']
+#       user=Regtb.query.filter_by(Email=Email).first()
+#    return render_template('reset.html')
