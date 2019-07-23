@@ -74,23 +74,28 @@ def reset():
       if request.method == 'POST':
              Email=request.form['Email']
              user=Regtb.query.filter_by(Email=Email).first()
-             if user is None:
-                   flash('There is no account with that email. You must register first','danger')
-                   return render_template('reset.html')       
+             if user:
+                   flash('There is an account with that email. you can now change your password','success')
+                   return render_template('resetpassword.html')   
+             flash('There is no account with that email. You must register first','danger')
+             return render_template('reset.html')    
       return render_template('reset.html')
 
 
 @app.route('/resetpassword',methods=['GET','POST'])
+# @login_required
 def resetpassword():
-      if current_user.is_authenticated:
-            if request.method == 'POST':
-                  Password = request.form['Password']
-                  Confirm_Password = request.form['Confirm_Password']
-                  secure_password = generate_password_hash(Password, method="sha256")
-                  if Password == Confirm_Password:
-                        return render_template('reset.html')
+       if reset():
+              if request.method == 'POST':
+                     Password = request.form['Password']
+                     Confirm_Password = request.form['Confirm_Password']
+                     secure_password = generate_password_hash(Password, method="sha256")
+                     if Password == Confirm_Password:
+                           return render_template('index.html')
+              flash('something went wrong','danger')
+              return render_template('index.html')   
 
-      return render_template('resetpassword.html')
+       return render_template('resetpassword.html')
 #   @app.route('/reset',methods=['GET','POST'])
 #   def reset():
 #    if request.method == 'POST':
