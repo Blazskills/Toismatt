@@ -96,7 +96,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <!-- login  -->
     <div class="modal-body align-w3">
             {%include"includes/_message.html"%}
-        <form action="#" method="post" class="p-sm-3">
+        <form action="{{url_for('login')}}" method="POST" class="p-sm-3">
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label">Username</label>
                 <input type="text" class="form-control" placeholder="your name" name="Name" id="recipient-name"
@@ -116,7 +116,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <span></span>Remember me?</label>
                 </div>
                 <div class="col-sm-6 forgot-w3l text-sm-right">
-                    <a href="#" class="text-secondary">Forgot Password?</a>
+                    <a href="{{url_for('reset')}}" class="text-secondary">Forgot Password?</a>
                 </div>
             </div>
             <p class="text-center dont-do text-secondary">Don't have an account?

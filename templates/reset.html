@@ -96,7 +96,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <!-- login  -->
     <div class="modal-body align-w3">
             {%include"includes/_message.html"%}
-        <form action="#" method="post" class="p-sm-3">
+        <form action="{{url_for('reset')}}" method="post" class="p-sm-3">
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label">Email</label>
                 <input type="email" class="form-control" placeholder="your Email" name="Email" id="recipient-email"
