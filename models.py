@@ -1,7 +1,6 @@
 
 from test import db,app
 from datetime import datetime
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_login import LoginManager,UserMixin,login_user, logout_user, login_required,current_user
 
 #for migrations
@@ -32,19 +31,7 @@ class Regtb(db.Model,UserMixin):
 
 
 
-       @staticmethod
-       def get_reset_token(self,expires_sec=300):
-              s = Serializer(app.config['SECRET_KEY'], expires_sec)
-              return s.dumps({'id': self.id}).decode('utf-8')
-
-       def verify_reset_token(token):
-              s = Serializer(app.config['SECRET_KEY'])
-              try:
-                     user_id = s.loads(token)['id']
-              except:
-                     return None
-              return Regtb.query.get()(id)
-
+       
 
               
 

@@ -6,9 +6,12 @@ import sqlite3
 
 
 
+
 con = sqlite3.connect('./tmp/database.db')
 app = Flask(__name__)
-app.config.from_pyfile('config.py')
+app.config.from_pyfile('config.cfg')
+
+
 db = SQLAlchemy(app)
 from views import *
 

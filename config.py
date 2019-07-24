@@ -1,3 +1,0 @@
-DEBUG = True
-SQLALCHEMY_DATABASE_URI = 'sqlite:///tmp/database.db'
-SECRET_KEY = 'JIHDGJIDHFHJDFJ'
