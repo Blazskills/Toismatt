@@ -6,6 +6,10 @@ from models import Regtb
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
+import smtplib
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 mail = Mail(app)
 
@@ -24,26 +28,72 @@ def register():
           try:
             Name = request.form['Name']
             Email = request.form['Email']
+            userr =Regtb.query.filter_by(Email=Email).first()
             Password = request.form['Password']
             Confirm_Password = request.form['Confirm_Password']
             secure_password = generate_password_hash(Password, method="sha256")
-            if Password == Confirm_Password:
-                  new_reg = Regtb(Name=Name,Email=Email,Password=secure_password)
-                  db.session.add(new_reg)
-                  db.session.commit()
-                  # token = s.dumps(Email, salt='email-confirm')
-                  msgs = Message( "Send Mail Tutorial!", sender='ilesanmiisaac@gmail.com', recipients=[Email])
-                  # link = url_for('confirm_email', token=token, _external=True)
-                  msgs.body = '<h1>Thank you for registering with us</h1> '
-                  mail.send(msgs)
-                  flash("You are registed and can login","success")
-                  return redirect(url_for('login'))
+            if not userr:
+                  if Password == Confirm_Password:
+                        
+                        # token = s.dumps(Email, salt='email-confirm')
+                        msgs = Message( "Send Mail Tutorial!", sender='ilesanmiisaac@gmail.com', recipients=[Email])
+                        # link = url_for('confirm_email', token=token, _external=True)
+                        msgs.body = """
+                        
+                        <h1>Thank you for registering with us body</h1> 
+                        
+                        """
+                        msgs.text = "Hi!\nHow are you?\nHere is the link you wanted:\nhttp://www.python.org"
+                        msgs.html = """\
+                                          <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                        <title>html title</title>
+                        <style type="text/css" media="screen">
+                        table{
+                              background-color: #AAD373;
+                              empty-cells:hide;
+                        }
+                        td.cell{
+                              background-color: white;
+                        }
+                        </style>
+                        
+                        
+                        
+                        <table style="border: blue 1px solid;">
+                        
+                        <tbody>
+                        <tr>
+                        <td class="cell">Cell 1.1</td>
+                        <td class="cell">Cell 1.2</td>
+                        </tr>
+                        
+                        
+                        <tr>
+                        <td class="cell">Cell 2.1</td>
+                        <td class="cell"></td>
+                        </tr>
+                        
+                        </tbody>
+                        </table>
+                        """
+                        mail.send(msgs)
+                        new_reg = Regtb(Name=Name,Email=Email,Password=secure_password)
+                        db.session.add(new_reg)
+                        db.session.commit()
+                        flash("You are registed and can login","success")
+                        return redirect(url_for('login'))
+
+                  else:
+                      flash("password does not match","danger")
+                      return render_template('register.html')
+            
             else:
-                  flash("password does not match","danger")
+                  flash("Email already used","danger")
                   return render_template('register.html')
+            
           except:
                 db.session.rollback()
-                flash("email already existed","danger")
+                flash("Try again, bad network","danger")
     return render_template('register.html')
 
 #Login route
@@ -76,6 +126,21 @@ def logout():
   logout_user()
   flash("You're logout Successfully","success")
   return redirect(url_for('index'))
+
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+   posts =Regtb.query.all()
+   return render_template('./dashboard/starter.html',posts=posts)
+
+
+@app.route('/delete/<int:id>')
+def drop(id):
+       blog_content = Regtb.query.filter_by(id=id).delete()
+       db.session.commit()
+       return 'deleted'
+
 
 # route for token confirmation 
 # @app.route('/confirm_email/<token>')
